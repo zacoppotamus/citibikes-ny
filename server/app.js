@@ -11,6 +11,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
 
+
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
 
@@ -27,6 +28,9 @@ require('./routes')(app);
 server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
 });
+
+// var Trip = require('./api/trip/trip.model');
+// Trip.distinct('start station name', function(err, trip) { if(err) console.log(err); console.log(trip); });
 
 // Expose app
 exports = module.exports = app;
