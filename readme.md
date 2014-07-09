@@ -3,7 +3,7 @@ NY Citibike Data
 
 Grab Data
 ===
-Dataset is too big for github so hosting it on [dropbox](https://www.dropbox.com/s/6zuhiprdt043spi/citibikedata.csv)
+Dataset is too big for github so hosting it on [dropbox](https://www.dropbox.com/s/6zuhiprdt043spi/citibikedata.csv). Add it to ./dataset/
 
 Installation
 ===
