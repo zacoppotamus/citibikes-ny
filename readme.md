@@ -48,4 +48,5 @@ Find rows in different collections:
 ```
 db.trips.find({ bikeid : 18940 })
 db.trips.find({ "start station name" : "Broadway & E 14 St" })
+db.trips.distinct('start station name') // get all different subway stations
 ```
