@@ -49,5 +49,5 @@ Find rows in different collections:
 db.trips.find({ bikeid : 18940 })
 db.trips.find({ "start station name" : "Broadway & E 14 St" })
 db.trips.distinct('start station name') // get all different subway stations
-db.trips.aggregate([{"$match" : {"start_sname" : "E 3 St & 1 Ave"}}, {"$group" : {"_id" : "$end_sname", "sum" : {"$sum":1} }}, {$sort:{"sum":1}} ])
+db.trips.aggregate([{"$match" : {"start_sname" : "E 3 St & 1 Ave"}}, {"$group" : {"_id" : "$end_sname", "sum" : {"$sum":1} }}, {$sort:{"sum":1}}, {$limit:5} ])
 ```
