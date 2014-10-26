@@ -23,24 +23,47 @@ exports.all = function(req, res) {
         if(!trip) { return res.send(404); }
         return res.json(trip);
     });
-    
+
 };
 
 exports.getStations = function(req, res) {
-    Trip.distinct('start_sname', function(err, station) { 
+    // Trip.distinct('start_sname', function(err, station) {
+    //     if(err) { return handleError(res,err); }
+    //     return res.json(station.sort());
+    // });
+
+    Trip.aggregate(
+      [
+        {
+          "$group" : {
+            _id : {start_sname: "$start_sname", lat: "$start_slat", lon: "$start_slon"}
+          }
+        }
+      ], function(err, results) {
         if(err) { return handleError(res,err); }
-        return res.json(station.sort());
+        return res.json(results);
     });
+
+    // Trip
+    //   .distinct('start_sname')
+    //   .select('start_sname start_slat start_slon')
+    //   .return(function(err, station) {
+    //     if(err) {
+    //       return handleError(res, err);
+    //     }
+    //     return res.json(station.sort());
+    //   });
+
 };
 
 exports.topDest = function(req, res) {
-    // console.log(req.queries.sname);
-    // console.log(req.queries.limit);
+    req.params.sname = decodeURIComponent(req.params.sname.split('+').join(' '))
+    console.log('sname is: '+req.params.sname);
     var queryLimit = req.params.limit || 5; // limit defaults to 5
     console.log('queryLimit is ' + queryLimit);
     Trip.aggregate(
         [
-            {"$match" : {"start_sname" : "E 3 St & 1 Ave"}},
+            {"$match" : {"start_sname" : req.params.sname}},
             {"$group" : {"_id" : "$end_sname", "sum" : {"$sum":1}}},
             {"$sort" : {"sum" : -1}},
             {"$limit" : 10}
