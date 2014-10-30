@@ -10,14 +10,14 @@ var Station = require('./station.model');
 
 // Get a list of all stations
 exports.getStations = function(req, res) {
-    Station.find(req.query, function(err, station) {
-        if (err) { return handleError(res, err); }
-        if (!station) { return res.send(404); }
-        return res.json(station);
-    })
+	Station.find(req.query, function(err, station) {
+		if (err) { return handleError(res, err); }
+		if (!station) { return res.send(404); }
+		return res.json(station);
+	})
 
 };
 
 function handleError(res, err) {
-    return res.send(500, err);
+	return res.send(500, err);
 }

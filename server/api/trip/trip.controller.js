@@ -14,65 +14,51 @@ var Trip = require('./trip.model');
 
 // Get a single trip
 exports.all = function(req, res) {
-    var fields = _.keys(req.query).join(' ');
+	var fields = _.keys(req.query).join(' ');
 
-    console.log(req.query);
+	console.log(req.query);
 
-    Trip.find(req.query, function (err, trip) {
-        if(err) { return handleError(res, err); }
-        if(!trip) { return res.send(404); }
-        return res.json(trip);
-    });
-
-};
-
-exports.getStations = function(req, res) {
-    // Trip.distinct('start_sname', function(err, station) {
-    //     if(err) { return handleError(res,err); }
-    //     return res.json(station.sort());
-    // });
-
-    Trip.aggregate(
-      [
-        {
-          "$group" : {
-            _id : {start_sname: "$start_sname", lat: "$start_slat", lon: "$start_slon"}
-          }
-        }
-      ], function(err, results) {
-        if(err) { return handleError(res,err); }
-        return res.json(results);
-    });
-
-    // Trip
-    //   .distinct('start_sname')
-    //   .select('start_sname start_slat start_slon')
-    //   .return(function(err, station) {
-    //     if(err) {
-    //       return handleError(res, err);
-    //     }
-    //     return res.json(station.sort());
-    //   });
+	Trip.find(req.query, function (err, trip) {
+		if(err) { return handleError(res, err); }
+		if(!trip) { return res.send(404); }
+		return res.json(trip);
+	});
 
 };
+
+// exports.getStations = function(req, res) {
+
+//     Trip.aggregate(
+//       [
+//         {
+//           "$group" : {
+//             _id : {start_sname: "$start_sname", lat: "$start_slat", lon: "$start_slon"}
+//           }
+//         }
+//       ], function(err, results) {
+//         if(err) { return handleError(res,err); }
+//         return res.json(results);
+//     });
+
+// };
 
 exports.topDest = function(req, res) {
-    req.params.sname = decodeURIComponent(req.params.sname.split('+').join(' '))
-    console.log('sname is: '+req.params.sname);
-    var queryLimit = req.params.limit || 5; // limit defaults to 5
-    console.log('queryLimit is ' + queryLimit);
-    Trip.aggregate(
-        [
-            {"$match" : {"start_sname" : req.params.sname}},
-            {"$group" : {"_id" : "$end_sname", "sum" : {"$sum":1}}},
-            {"$sort" : {"sum" : -1}},
-            {"$limit" : 10}
-        ], function(err, results) {
-            return res.json(results);
-    });
+	req.params.sname = decodeURIComponent(req.params.sname.split('+').join(' '))
+	console.log('sname is: '+req.params.sname);
+	var queryLimit = req.params.limit || 5; // limit defaults to 5
+	console.log('queryLimit is ' + queryLimit);
+	Trip.aggregate(
+		[
+			{"$match" : {"start_sname" : req.params.sname}},
+			{"$group" : {"_id" : "$end_sname", "sum" : {"$sum":1}}},
+			{"$sort" : {"sum" : -1}},
+			{"$limit" : 10}
+		], function(err, results) {
+			return res.json(results);
+	});
 };
 
 
 function handleError(res, err) {
-    return res.send(500, err);
+	return res.send(500, err);
 }
