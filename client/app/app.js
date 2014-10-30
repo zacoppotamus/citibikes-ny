@@ -26,7 +26,7 @@ $("#map").css({
 
 L.mapbox.accessToken = 'pk.eyJ1IjoiaXphYyIsImEiOiJTVEZENjZnIn0.MOtaL6W1_VXCc6hhpb26Mw';
 var map = L.mapbox.map('map', 'izac.k1ei8mkp')
-		.setView([40.785, -73.9], 12);
+		.setView([40.73, -74], 13);
 
 console.log("Making request");
 // var jqxhr = $.get("/api/stations/getStations", function() {
@@ -52,7 +52,11 @@ var stationsJSONRequest = $.getJSON("./data/stations.json", function() {
 
 		for (var i = 0; i < data.length; i++) {
 			console.log(data[i]);
-			L.circle([data[i].lat, data[i].lon], 30).addTo(map);
+			var pathOptions = {
+				stroke: false,
+				color: '#000'
+			}
+			L.circle([data[i].lat, data[i].lon], 100, pathOptions).addTo(map);
 		}
 	})
 	.fail(function() {
