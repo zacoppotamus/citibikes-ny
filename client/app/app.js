@@ -42,7 +42,7 @@ console.log("Making request");
 // 		console.log("finished")
 // 	});
 
-var stations;
+var stations = [];
 
 var stationsJSONRequest = $.getJSON("./data/stations.json", function() {
 	console.log("Success getting stations JSON data");
@@ -50,13 +50,42 @@ var stationsJSONRequest = $.getJSON("./data/stations.json", function() {
 	.done(function(data) {
 		console.log("done");
 
+		console.log(stations);
+
 		for (var i = 0; i < data.length; i++) {
-			console.log(data[i]);
 			var pathOptions = {
 				stroke: false,
-				color: '#000'
+				opacity: 1
 			}
-			L.circle([data[i].lat, data[i].lon], 100, pathOptions).addTo(map);
+			var circleMarker = L.circle([data[i].lat, data[i].lon], 60, pathOptions);
+
+			circleMarker.data = {
+				lat: data[i].lat,
+				lon: data[i].lon,
+				name: data[i].station
+			};
+			stations.push(data[i]);
+			circleMarker.addTo(map)
+			.bindPopup(data[i].station)
+			.addEventListener('click', function(data) {
+				// $.get("/api/")
+
+				$.getJSON("/api/top_dest/" + encodeURIComponent(data.target.data.name), function() {
+					console.log("Getting top stations for " + data.target.data.name);
+				})
+				.done(function(data) {
+					console.log("done");
+					console.log(data);
+					// get and store polyline coordinates from google api and draw route on map
+					// for (int i = 0; i < 5; i++) {
+
+					// }
+				})
+				.fail(function(data) {
+					console.log("Couldn't retrieve top stations!");
+				});
+
+			});
 		}
 	})
 	.fail(function() {
@@ -65,7 +94,7 @@ var stationsJSONRequest = $.getJSON("./data/stations.json", function() {
 	.always(function(data) {
 		console.log("finished");
 		console.log("Total stations: " + data.length);
-	stations = stationsJSONRequest.responseText;
+		// stations = stationsJSONRequest.responseText;
 	// console.log(stations);
 	});
 

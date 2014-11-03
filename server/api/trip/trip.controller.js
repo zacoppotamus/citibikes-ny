@@ -50,9 +50,9 @@ exports.topDest = function(req, res) {
 	Trip.aggregate(
 		[
 			{"$match" : {"start_sname" : req.params.sname}},
-			{"$group" : {"_id" : "$end_sname", "sum" : {"$sum":1}}},
+			{"$group" : {"_id" : {name: "$end_sname", lat: "$end_slat", lon: "$end_slon"}, sum : {"$sum":1}}},
 			{"$sort" : {"sum" : -1}},
-			{"$limit" : 10}
+			{"$limit" : 5}
 		], function(err, results) {
 			return res.json(results);
 	});
